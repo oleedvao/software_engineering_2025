@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+hide empty description
+
+[*] --> ChooseWeek
+
+ChooseWeek --> ChooseDay
+
+ChooseDay --> ChooseExersise
+
+ChooseExersise --> ChooseDay
+
+ChooseExersise --> ChooseExersise
+ChooseExersise --> TemplateCreated
+TemplateCreated --> [*]
+TemplateCreated --> AssignToAthlete
+
+
+
+AssignToAthlete --> [*]
+
+
+@enduml

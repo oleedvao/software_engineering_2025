@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Trainer as trainer
+actor Athlete as athlete
+database Database as db
+
+activate trainer
+trainer -> trainer : Define training plan information
+
+
+trainer -> db : Create training plan
+activate db
+db --> trainer : Training plan created
+deactivate db
+
+trainer -> db : Get exercises
+activate db
+db --> trainer : Give exercises
+deactivate db
+
+trainer -> db : Set exercises for training plan
+activate db
+db -->  trainer: Training plan updated
+deactivate db
+
+
+
+alt assign athlete
+trainer -> db : Assign athlete
+activate db
+db --> trainer : Athlete assigned
+deactivate trainer
+db --> athlete : Notify assigned training plan
+deactivate db
+
+else no athlete assigned
+end
+
+
+
+@enduml

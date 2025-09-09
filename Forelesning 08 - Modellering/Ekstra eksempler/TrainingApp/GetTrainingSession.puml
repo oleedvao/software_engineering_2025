@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+
+WebApp -> WebAPI : GET /api/training_sessions.\n Containing userId
+activate WebApp
+activate WebAPI
+WebAPI -> TrainingDataService : getTrainingSessionsForUser(userId)
+
+database TrainingDataDB
+activate TrainingDataService
+TrainingDataService -> TrainingDataDB : SQL query for\n userId's training sessions
+
+
+activate TrainingDataDB
+alt success
+    TrainingDataDB --> TrainingDataService : SQL response with data
+    deactivate TrainingDataDB
+
+
+    TrainingDataService --> WebAPI : Returns training session data-objects
+    deactivate TrainingDataService
+
+    WebAPI --> WebApp : 200: OK. \nWith training sessions in JSON-format
+    deactivate WebAPI
+    deactivate WebApp
+else SQL error
+    activate TrainingDataDB
+
+
+    activate TrainingDataService
+    TrainingDataDB --> TrainingDataService: SQL error
+    deactivate TrainingDataDB
+    deactivate TrainingDataService
+
+    activate WebAPI
+    TrainingDataService --> WebAPI : Throws SQLException
+    deactivate WebAPI
+
+    activate WebApp
+    WebAPI --> WebApp : 500: Could not retrieve training sessions
+    deactivate WebApp
+end
+
+
+@enduml

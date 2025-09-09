@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/component-diagram
+package "Backend" {
+    database NoSQLDatabase
+
+    package ServerLogic {
+        component TODOService
+
+        component NotificationService
+    }
+
+    component RESTAPI
+}
+
+package "Frontent" {
+    component WebApplication
+    component MobileApplication
+}
+WebApplication --> RESTAPI
+MobileApplication --> RESTAPI
+
+
+RESTAPI --> TODOService
+TODOService --> NoSQLDatabase
+
+NotificationService --> NoSQLDatabase
+
+
+
+
+
+
+
+
+@enduml

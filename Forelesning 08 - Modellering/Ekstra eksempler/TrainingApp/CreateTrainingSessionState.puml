@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+hide empty description
+
+[*] -> HomePage
+'HomePage --> AllTrainingSessionsView : User navigates to
+HomePage -> CreateTrainingSession : User navigates to
+
+'AllTrainingSessionsView --> HomePage : User exits view
+'AllTrainingSessionsView --> TrainingSessionView : User clicks one training session
+
+'TrainingSessionView --> AllTrainingSessionsView
+'TrainingSessionView --> HomePage
+'TrainingSessionView --> EditTrainingSession : User clicks edit
+'EditTrainingSession --> TrainingSessionView : Cancel/Success
+
+
+state CreateTrainingSession {
+    [*] --> FillSchema
+    FillSchema -> [*] : Cancel
+
+    FillSchema --> AttemptCreation : User clicks submit
+    state creationAttemptResult <<choice>>
+    AttemptCreation --> creationAttemptResult
+    creationAttemptResult --> [*] : Success
+    creationAttemptResult --> DisplayErrorMessage : Failure
+    DisplayErrorMessage -> FillSchema
+}
+state CreateTrainingSessionResult <<choice>>
+CreateTrainingSession --> CreateTrainingSessionResult
+CreateTrainingSessionResult --> TrainingSessionView : Successful creation
+CreateTrainingSessionResult --> HomePage : Cancel
+
+
+@enduml

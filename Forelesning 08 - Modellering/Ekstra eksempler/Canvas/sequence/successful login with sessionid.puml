@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Client as client
+entity Authenticator as auth
+database Database as db
+
+auth -> client : request sessionid
+activate client
+activate auth
+client -> auth : send sessionid
+
+
+auth -> db : check sessionid
+activate db
+
+alt valid sessionid
+
+    db --> auth: valid sessionid for username
+
+    auth --> client: redirect to user page
+
+
+
+else invalid sessionid
+
+    autonumber 4
+    db --> auth: invalid sessionid for username
+    deactivate db
+    
+
+
+    auth --> client: redirect to login page
+    deactivate auth
+    deactivate client
+end
+
+
+@enduml

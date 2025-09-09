@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+hide empty description
+
+[*] --> LoginPage
+
+LoginPage --> LoginPage : Invalid login
+LoginPage --> [*] : Aborted
+LoginPage --> ApplicationMainPage : Successful login
+
+ApplicationMainPage --> OtherPage : Navigate to other page
+ApplicationMainPage --> [*] : Logout
+
+OtherPage --> ApplicationMainPage : Navigate to main page
+OtherPage --> [*] : Logout
+
+
+@enduml

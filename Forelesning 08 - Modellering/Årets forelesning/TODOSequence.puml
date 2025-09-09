@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Frontend -> RESTAPI : POST /api/createtask \n With task data
+RESTAPI -> TODOService : calls createTask() with task data
+
+database NoSQLDatabase
+
+TODOService -> NoSQLDatabase : SQL insert task
+NoSQLDatabase -> TODOService : created
+
+NoSQLDatabase -> NotificationService : New Task created
+NotificationService -> NotificationService : Notify user
+
+TODOService -> RESTAPI : 200: created successfully
+
+RESTAPI -> Frontend : Created. Redirect to task view
+
+
+
+@enduml

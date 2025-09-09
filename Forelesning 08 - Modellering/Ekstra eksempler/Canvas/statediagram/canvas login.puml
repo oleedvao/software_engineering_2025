@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+hide empty description
+
+state "Feide Login Page" as login
+
+[*] --> login
+login --> [*] : Abort
+login --> login : Invalid login
+
+state usertype <<choice>>
+login --> usertype : Success
+usertype --> StudentPage : User is student
+usertype --> EmployeePage : User is employee
+StudentPage --> [*] : Logout
+EmployeePage --> [*] : Logout
+
+
+EmployeePage --> MakeAnnouncement : Click make announcement
+MakeAnnouncement --> EmployeePage : Finished
+state MakeAnnouncement {
+    [*] --> WriteAnnouncment
+    WriteAnnouncment --> PublishAnnouncement : Click publish
+    WriteAnnouncment --> [*] : Abort
+
+    PublishAnnouncement --> WriteAnnouncment : Failed
+    PublishAnnouncement --> [*] : Success
+}
+
+StudentPage --> SubmitAssignment : Click submit assignment
+SubmitAssignment --> StudentPage : Finished
+state SubmitAssignment {
+    [*] --> UploadMedia
+    UploadMedia --> [*] : Abort
+    UploadMedia --> UploadMedia : Failed
+    UploadMedia --> MediaUploaded : Success
+
+
+    MediaUploaded --> [*] : Abort
+    MediaUploaded --> Submission : Click submit
+    MediaUploaded --> UploadMedia : Click re-upload
+
+
+    Submission --> [*] : Success
+    Submission --> MediaUploaded : Failed
+}
+@enduml

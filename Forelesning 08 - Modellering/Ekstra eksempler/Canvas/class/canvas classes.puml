@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+
+abstract class User {
+    - String name
+}
+
+User <|-- Student
+class Student {
+    String studentId
+}
+
+
+User <|-- Lecturer
+Lecturer o-- Course
+class Lecturer {
+
+}
+
+Course o-- Student
+Course --> Lecturer
+class Course {
+    - String name
+    + void publishAnnouncement(String content)
+}
+
+
+@enduml

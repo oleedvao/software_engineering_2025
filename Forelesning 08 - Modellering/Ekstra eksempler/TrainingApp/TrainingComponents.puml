@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+
+
+package "Backend" {
+    package "MySQL Databases" {
+        database TrainingDataDB
+        database UserDataDB
+    }
+
+    package "Services" {
+
+        [SQLAuthenticationService] --> [UserDataDB]
+        [SQLTrainingDataService] --> [TrainingDataDB]
+
+    }
+    /'
+    package "Ports" {
+        interface AuthenticationService <<interface>>
+        interface TrainingDataService <<interface>>
+
+        AuthenticationService <|.. [SQLAuthenticationService]
+        TrainingDataService <|.. [SQLTrainingDataService]
+    }
+    '/
+
+    package "Infrastructure" {
+
+        [WebAPI] --> SQLAuthenticationService
+        [WebAPI] --> SQLTrainingDataService
+    }
+}
+
+
+package "Frontend" {
+    [MobileApp] --> [WebAPI]
+    [WebApp] --> [WebAPI]
+}
+@enduml
