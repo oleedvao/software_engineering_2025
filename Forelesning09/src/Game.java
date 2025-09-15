@@ -2,10 +2,12 @@ public class Game {
 
     private String title;
     private String genre;
+    private double rating;
 
-    public Game(String title, String genre) {
+    public Game(String title, String genre, double rating) {
         this.title = title;
         this.genre = genre;
+        this.rating = rating;
     }
 
     public String getTitle() {
