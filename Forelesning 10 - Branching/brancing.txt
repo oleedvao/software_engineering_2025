@@ -4,3 +4,5 @@ Gorillas
 Games 
 Movies
 Work
+TV
+Computers
