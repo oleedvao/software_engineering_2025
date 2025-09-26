@@ -32,7 +32,12 @@ public class InformationCheckerTests {
         Assertions.assertEquals(120, upperBoundResult);
     }
 
+    /*
+    Enhetstest for å kontrollere at alder-verdier lavere enn den aksepterte rekkevidden også blir håndert riktig
+    (konvertert til laveste aksepterte verdi).
+     */
     @Test
+    @DisplayName("controlAge(): Age lower than acceptable range is handled correctly")
     public void controlAge_ageLowerThanAcceptableRangeIsHandledCorrectly() {
         // Arrange
         InformationChecker informationChecker = new InformationChecker();
@@ -48,7 +53,12 @@ public class InformationCheckerTests {
         Assertions.assertEquals(0, lowerBoundResult);
     }
 
+    /*
+    Enhetstest for å kontrollere at alder-verdier høyere enn den aksepterte rekkevidden blir håndert riktig
+    (konverteres til høyeste aksepterte verdi).
+     */
     @Test
+    @DisplayName("controlAge(): Age higher than acceptable range is handled correctly")
     public void controlAge_ageHigherThanAcceptableRangeIsHandledCorrectly() {
         // Arrange
         InformationChecker informationChecker = new InformationChecker();
