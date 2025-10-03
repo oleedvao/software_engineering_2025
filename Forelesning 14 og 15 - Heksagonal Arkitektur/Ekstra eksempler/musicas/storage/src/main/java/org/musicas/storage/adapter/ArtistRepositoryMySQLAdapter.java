@@ -1,4 +1,4 @@
-package org.musicas.storage;
+package org.musicas.storage.adapter;
 
 import org.musicas.core.domain.Artist;
 import org.musicas.core.domain.Song;
