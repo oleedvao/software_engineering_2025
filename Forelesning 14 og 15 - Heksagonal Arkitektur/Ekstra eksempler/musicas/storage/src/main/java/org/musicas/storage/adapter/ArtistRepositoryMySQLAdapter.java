@@ -32,7 +32,7 @@ public class ArtistRepositoryMySQLAdapter implements ArtistRepositoryPort {
     }
 
     @Override
-    public ArrayList<Song> getArtistSongs(int artistId) {
+    public ArrayList<Song> getArtistSongs(int artistId) throws ArtistRepositoryException{
         String sql = "SELECT id, title, lengthInSeconds, albumId " +
                 "FROM songs " +
                 "WHERE artistId=?";

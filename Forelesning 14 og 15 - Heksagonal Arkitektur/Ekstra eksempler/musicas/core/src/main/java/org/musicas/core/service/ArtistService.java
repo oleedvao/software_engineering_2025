@@ -18,7 +18,7 @@ public class ArtistService {
         this.artistRepository = artistRepository;
     }
 
-    public void createArtist(CreateArtistRequest request) {
+    public void createArtist(CreateArtistRequest request){
         Artist artist = new Artist(request.getName());
         artistRepository.createArtist(artist);
     }
