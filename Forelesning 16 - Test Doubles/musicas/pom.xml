@@ -12,6 +12,7 @@
         <module>core</module>
         <module>storage</module>
         <module>app</module>
+        <module>test</module>
     </modules>
 
     <properties>
