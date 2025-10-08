@@ -6,6 +6,7 @@ import org.musicas.core.dto.CreateArtistRequest;
 import org.musicas.core.dto.GetArtistSongsWithLengthRequest;
 import org.musicas.core.dto.GetArtistSongsWithLengthResult;
 import org.musicas.core.dto.SongDTO;
+import org.musicas.core.exception.ArtistRepositoryException;
 import org.musicas.core.port.ArtistRepositoryPort;
 
 import java.util.ArrayList;
@@ -18,12 +19,14 @@ public class ArtistServiceWithoutDTOs {
         this.artistRepository = artistRepository;
     }
 
-    public void createArtist(String name) {
+    public void createArtist(String name)
+    throws ArtistRepositoryException {
         Artist artist = new Artist(name);
         artistRepository.createArtist(artist);
     }
 
-    public ArrayList<SongDTO> getArtistSongsWithLength(int artistId, int lengthInSeconds) {
+    public ArrayList<SongDTO> getArtistSongsWithLength(int artistId, int lengthInSeconds)
+    throws ArtistRepositoryException {
 
         ArrayList<Song> artistSongs = artistRepository.getArtistSongs(artistId);
 
