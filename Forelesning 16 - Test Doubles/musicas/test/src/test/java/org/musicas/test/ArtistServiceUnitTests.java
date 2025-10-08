@@ -31,7 +31,8 @@ public class ArtistServiceUnitTests {
     liste med sanger som har varierte lengder, slik at vi får tested filtreringslogikken.
      */
     @Test
-    public void getArtistSongsWithLength_ArtistSongsAreFilteredSuccessully() {
+    public void getArtistSongsWithLength_ArtistSongsAreFilteredSuccessully()
+    throws Exception {
         // Arrange
         //ArtistRepositoryPort mockArtistRepository = Mockito.mock(ArtistRepositoryPort.class);
         ArrayList<Song> stubbedSongs = new ArrayList<>();
@@ -66,7 +67,8 @@ public class ArtistServiceUnitTests {
     bør bruke mocking.
      */
     @Test
-    public void createArtist_ArtistRepositoryMethodIsCalled() {
+    public void createArtist_ArtistRepositoryMethodIsCalled()
+    throws Exception{
         // Arrange
         ArtistService artistService = new ArtistService(mockArtistRepository);
 
