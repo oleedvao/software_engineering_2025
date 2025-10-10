@@ -1,17 +1,19 @@
 package org.musicas.test.integrationtest;
 
 import org.junit.jupiter.api.*;
-import org.musicas.core.domain.Artist;
-import org.musicas.core.domain.Song;
+import org.musicas.core.dto.CreateArtistRequest;
+import org.musicas.core.dto.GetArtistSongsWithLengthRequest;
+import org.musicas.core.dto.GetArtistSongsWithLengthResult;
+import org.musicas.core.dto.SongDTO;
+import org.musicas.core.service.ArtistService;
 import org.musicas.storage.adapter.ArtistRepositoryMySQLAdapter;
 import org.musicas.test.testdb.H2TestDatabase;
-import org.musicas.test.testdb.TestContainerDatabase;
 import org.musicas.test.testdb.TestDatabase;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 
-public class ArtistRepositoryMySQLAdapterIntegrationTests {
+public class ArtistServiceIntegrationTests {
 
     /* Initialiserer hvilken type test-base som skal benyttes.
     In-memory H2-database er raskest og krever ikke noe eksternt (Anbefales i forhold til kursets scope).
@@ -65,16 +67,18 @@ public class ArtistRepositoryMySQLAdapterIntegrationTests {
     }
 
     /*
-    Tester at en artist kan opprettes på normalt vis.
+    Tester at createArtist() i ArtistService medfører at artisten blir opprettet i test-databasen.
      */
     @Test
     @DisplayName("createArtist(): Artist is created successfully")
-    public void createArtist_ArtistIsCreatedSuccessfully() throws Exception{
+    public void createArtist_ArtistIsCreatedSuccessfully() throws Exception {
         // Arrange
-        Artist artist = new Artist("Ween");
+        ArtistService artistService = new ArtistService(artistRepository);
+
+        CreateArtistRequest request = new CreateArtistRequest("Ween");
 
         // Act
-        artistRepository.createArtist(artist);
+        artistService.createArtist(request);
 
         // Assert
         Assertions.assertEquals(2, testDB.countRowsInTable("artists"));
@@ -82,34 +86,39 @@ public class ArtistRepositoryMySQLAdapterIntegrationTests {
     }
 
     /*
-    Skjekker at sangene knyttet til artisten definert i dummy-data kan hentes ut på normalt vis.
+    Tester at dummy-artistens sanger både hentes ut og filtreres riktig.
      */
     @Test
-    @DisplayName("getArtistSongs(): Artist songs are retrived successfully")
-    public void getArtistSongs_ArtistSongsRetrievedSuccessfully() throws Exception {
+    @DisplayName("getArtistSongsWithLength(): Artist songs with minimum length are retrived sucessfully")
+    public void getArtistSongsWithLength_ArtistSongsWithMinimumLengthRetrievedSuccessfully()
+    throws Exception {
         // Arrange
-        int dummyArtistId = 1;
+        ArtistService artistService = new ArtistService(artistRepository);
+
+        GetArtistSongsWithLengthRequest request = new GetArtistSongsWithLengthRequest(
+                1, 200
+        );
 
         // Act
-        ArrayList<Song> artistSongs = artistRepository.getArtistSongs(dummyArtistId);
+        GetArtistSongsWithLengthResult result = artistService.getArtistSongsWithLength(request);
 
         // Assert
-        Assertions.assertEquals(3, artistSongs.size());
+        Assertions.assertEquals(2, result.getSongDTOs().size()); // Én sang er filtrert bort
 
-        ArrayList<String> artistSongTitles = getTitlesFromSongList(artistSongs);
-        Assertions.assertTrue(artistSongTitles.contains("Reckoner"));
-        Assertions.assertTrue(artistSongTitles.contains("Weird Fishes"));
-        Assertions.assertTrue(artistSongTitles.contains("Faust Arp"));
+        ArrayList<String> songTitles = getSongTitlesFromResult(result);
+        Assertions.assertTrue(songTitles.contains("Reckoner"));
+        Assertions.assertTrue(songTitles.contains("Weird Fishes"));
+
+        Assertions.assertFalse(songTitles.contains("Faust Arp")); // Sjekker at denne er blitt filtrert bort
     }
 
     /*
-    Helpe-metode for testen over.
-    Anskaffer en liste med bare sang-titler fra en liste med sanger.
+    Hjelpe-metode for testen over.
      */
-    private ArrayList<String> getTitlesFromSongList(ArrayList<Song> songs) {
+    private ArrayList<String> getSongTitlesFromResult(GetArtistSongsWithLengthResult result) {
         ArrayList<String> songTitles = new ArrayList<>();
 
-        for (Song song : songs) {
+        for (SongDTO song : result.getSongDTOs()) {
             songTitles.add(song.getTitle());
         }
 
