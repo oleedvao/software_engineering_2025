@@ -13,37 +13,60 @@ import java.util.ArrayList;
 
 public class ArtistRepositoryMySQLAdapterIntegrationTests {
 
-    //private final static TestDatabase testDB = new H2TestDatabase();
-    private final static TestDatabase testDB = new TestContainerDatabase();
+    /* Initialiserer hvilken type test-base som skal benyttes.
+    In-memory H2-database er raskest og krever ikke noe eksternt (Anbefales i forhold til kursets scope).
+    Testcontainers krever at Docker Desktop er installert på maskinen.
+     */
+    private final static TestDatabase testDB = new H2TestDatabase();
+    //private final static TestDatabase testDB = new TestContainerDatabase();
+
     private static Connection connection;
 
     private static ArtistRepositoryMySQLAdapter artistRepository;
 
+    /*
+    Starter og setter opp det grunnleggende i test-databasen før noen av testene kjører.
+     */
     @BeforeAll
     public static void setUpTestDB() throws Exception{
+        // Starter test-databasen
         connection = testDB.startDB();
         testDB.createTables();
 
+        // Tillater å senere kunne rulle tilbake data-endringer.
         connection.setAutoCommit(false);
 
         artistRepository = new ArtistRepositoryMySQLAdapter(connection);
     }
 
+    /*
+    Oppretter dummy data før hver enkelt test, slik at utganspunktet er likt for samtlige av dem.
+     */
     @BeforeEach
     public void prepareTest() throws Exception{
         testDB.createDummyData();
     }
 
+    /*
+    Rydder opp etter testen ved å rulle tilbake endringene som testen gjør.
+    Dette vil i praksis medføre at databasen blir tilbakestilt til de tomme tabellene.
+     */
     @AfterEach
     public void cleanUpTest() throws Exception{
         connection.rollback();
     }
 
+    /*
+    Stopper databasen når alle testene er ferdig med å kjøre.
+     */
     @AfterAll
     public static void tearDownTestDB() throws Exception {
         testDB.stopDB();
     }
 
+    /*
+    Tester at en artist kan opprettes på normalt vis.
+     */
     @Test
     public void createArtist_ArtistIsCreatedSuccessfully() throws Exception{
         // Arrange
@@ -57,6 +80,9 @@ public class ArtistRepositoryMySQLAdapterIntegrationTests {
         Assertions.assertEquals("Ween", testDB.getArtistName(2));
     }
 
+    /*
+    Skjekker at sangene knyttet til artisten definert i dummy-data kan hentes ut på normalt vis.
+     */
     @Test
     public void getArtistSongs_ArtistSongsRetrievedSuccessfully() throws Exception {
         // Arrange
@@ -67,10 +93,17 @@ public class ArtistRepositoryMySQLAdapterIntegrationTests {
 
         // Assert
         Assertions.assertEquals(3, artistSongs.size());
+
         ArrayList<String> artistSongTitles = getTitlesFromSongList(artistSongs);
         Assertions.assertTrue(artistSongTitles.contains("Reckoner"));
+        Assertions.assertTrue(artistSongTitles.contains("Weird Fishes"));
+        Assertions.assertTrue(artistSongTitles.contains("Faust Arp"));
     }
 
+    /*
+    Helpe-metode for testen over.
+    Anskaffer en liste med bare sang-titler fra en liste med sanger.
+     */
     private ArrayList<String> getTitlesFromSongList(ArrayList<Song> songs) {
         ArrayList<String> songTitles = new ArrayList<>();
 
