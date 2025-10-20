@@ -6,6 +6,13 @@ import java.util.Collections;
 
 public class ExamToolTests {
 
+    /*
+    Denne testen er skrevet med TDD. Vi starter altså dermed med en veldig enkel test og
+    oppretter det som er nødvendig for å kompilere og kjører testen. Denne vil typisk feile (Red).
+    Deretter, hvis testen feiler, oppdaterer vi enheten under test på den enkleste måten slik at den passerer (Green).
+    Så ser vi på løsningen og vurderer å refaktorere enheten (Refactor).
+    Vi følger denne prosessen helt til testen er komplett og vi har en enhetet som oppfyller alle kravene.
+     */
     @Test
     public void countGrade_GradeIsCountedCorrectly() {
         // Arrange
@@ -26,6 +33,8 @@ public class ExamToolTests {
         int countB2 = ExamTool.countGrade("B", gradeList2);
         int countC2 = ExamTool.countGrade("C", gradeList2);
         int countD2 = ExamTool.countGrade("D", gradeList2);
+        int countE2 = ExamTool.countGrade("E", gradeList2);
+        int countF2 = ExamTool.countGrade("F", gradeList2);
 
         // Assert
         Assertions.assertEquals(3, countA);
@@ -39,6 +48,8 @@ public class ExamToolTests {
         Assertions.assertEquals(1, countB2);
         Assertions.assertEquals(1, countC2);
         Assertions.assertEquals(2, countD2);
+        Assertions.assertEquals(1, countE2);
+        Assertions.assertEquals(1, countF2);
     }
 
 }
